@@ -5,6 +5,7 @@ metadata:
   namespace: dev
   labels:
     app: nginx
+    project: dev
 spec:
   replicas: 1
   selector:

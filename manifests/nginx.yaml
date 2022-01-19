@@ -29,7 +29,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: manifest-nginx1-deployment-co
-  namespace: dev
+  namespace: default
   labels:
     app: nginx1
     project: dev

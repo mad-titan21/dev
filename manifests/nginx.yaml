@@ -1,10 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: manifest-nginx-deployment
+  name: manifest-nginx-deployment-co
   namespace: dev
   labels:
     app: nginx
+    project: dev
+    tag: common
 spec:
   replicas: 1
   selector:

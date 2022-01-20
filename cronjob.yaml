@@ -1,0 +1,91 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: hello
+  namespace: ccb
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: ccb
+          containers:
+          - name: hello
+            image: nightfury1204/alpine-curl
+            imagePullPolicy: IfNotPresent
+            command: [ 'sh', '-c' ,'curl  --insecure -X POST -H "Content-Type: application/yaml" --data "$(cat /manifest/deploy.yaml)" -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"  https://kubernetes.default.svc.cluster.local/apis/apps/v1/namespaces/ccb/deployments']
+            volumeMounts:
+            - name: manifest-dir
+              mountPath: /manifest
+          restartPolicy: OnFailure
+          volumes:
+          - name: manifest-dir
+            configMap:
+              name: game-config
+              defaultMode: 0777
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: game-config
+  namespace: ccb
+data:
+  deploy.yaml: |
+     apiVersion: apps/v1
+     kind: Deployment
+     metadata:
+       name: nginx234-deployment
+       namespace: ccb
+       labels:
+         app: nginx
+         project: dev
+     spec:
+       replicas: 1
+       selector:
+         matchLabels:
+           app: nginx
+       template:
+         metadata:
+           labels:
+             app: nginx
+         spec:
+           serviceAccountName: ccb
+           containers:
+           - name: nginx
+             image: nginx:1.14.2
+             ports:
+             - containerPort: 80
+
+---
+
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ccb-role
+rules:
+    - apiGroups: ["apps", ""] # "" indicates the core API group
+      resources: ["pods", "services", "deployments"]
+      verbs: ["get", "watch", "list", "create", "update", "delete"]
+
+---
+
+
+apiVersion: rbac.authorization.k8s.io/v1
+# This role binding allows "dave" to read secrets in the "development" namespace.
+# You need to already have a ClusterRole named "secret-reader".
+kind: RoleBinding
+metadata:
+  name: ccb
+  #
+  # The namespace of the RoleBinding determines where the permissions are granted.
+  # This only grants permissions within the "development" namespace.
+  namespace: ccb
+subjects:
+- kind: ServiceAccount
+  name: ccb # Name is case sensitive
+  namespace: ccb
+roleRef:
+  kind: ClusterRole
+  name: ccb-role
+  apiGroup: rbac.authorization.k8s.io

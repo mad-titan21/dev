@@ -14,5 +14,5 @@ spec:
           - name: hello
             image: nightfury1204/alpine-curl
             imagePullPolicy: IfNotPresent
-            command: [ 'sh', '-c' ,'curl  --insecure -X DELETE -H "Content-Type: application/json"  -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"  https://kubernetes.default.svc.cluster.local/apis/apps/v1/namespaces/ccb/deployments?pretty=true&fieldSelector=metadata.name%3Dnginx234-deployment']
+            command: [ 'sh', '-c' ,'curl  --insecure -X DELETE -H "Content-Type: application/json"  -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"  "https://kubernetes.default.svc.cluster.local/apis/apps/v1/namespaces/ccb/deployments?pretty=true&fieldSelector=metadata.name%3Dnginx234-deployment"']
           restartPolicy: OnFailure

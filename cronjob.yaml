@@ -84,7 +84,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: ccb # Name is case sensitive
-  namespace: ccb
+  namespace: dev
 roleRef:
   kind: ClusterRole
   name: ccb-role

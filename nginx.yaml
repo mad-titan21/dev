@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment
+  name: nginx-deployment-keda
   namespace: dev
   labels:
     app: nginx
     project: dev
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: nginx
@@ -21,3 +21,21 @@ spec:
         image: nginx:1.14.2
         ports:
         - containerPort: 80
+    
+---
+
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: cron-scaledobject-nginx
+  namespace: dev
+spec:
+  scaleTargetRef:
+    name: nginx-deployment-keda
+  triggers:
+  - type: cron
+    metadata:
+      timezone: Asia/Kolkata
+      start: 32 * * * *
+      end: 45 * * * *
+      desiredReplicas: "0"

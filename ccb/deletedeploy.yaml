@@ -1,10 +1,10 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: hello-delete
+  name: create-deployment-delete
   namespace: ccb
 spec:
-  schedule: "*/5 * * * *"
+  schedule: "*/3 * * * *"
   jobTemplate:
     spec:
       template:

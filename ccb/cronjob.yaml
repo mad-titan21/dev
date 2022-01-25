@@ -22,13 +22,13 @@ spec:
           volumes:
           - name: manifest-dir
             configMap:
-              name: game-config
+              name: deployment-config
               defaultMode: 0777
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: game-config
+  name: deployment-config
   namespace: ccb
 data:
   deploy.yaml: |

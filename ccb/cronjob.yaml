@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: hello
+  name: create-deployment
   namespace: ccb
 spec:
   schedule: "*/1 * * * *"
@@ -11,7 +11,7 @@ spec:
         spec:
           serviceAccountName: ccb
           containers:
-          - name: hello
+          - name: create-deployment
             image: nightfury1204/alpine-curl
             imagePullPolicy: IfNotPresent
             command: [ 'sh', '-c' ,'curl  --insecure -X POST -H "Content-Type: application/yaml" --data "$(cat /manifest/deploy.yaml)" -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"  https://kubernetes.default.svc.cluster.local/apis/apps/v1/namespaces/ccb/deployments']
@@ -35,7 +35,7 @@ data:
      apiVersion: apps/v1
      kind: Deployment
      metadata:
-       name: nginx234-deployment
+       name: deployment-created
        namespace: ccb
        labels:
          app: nginx

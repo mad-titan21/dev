@@ -4,7 +4,7 @@ metadata:
   name: create-deployment-delete
   namespace: ccb
 spec:
-  schedule: "*/3 * * * *"
+  schedule: "00 02 * * *"
   jobTemplate:
     spec:
       template:
